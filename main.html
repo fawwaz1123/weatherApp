@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The weather</title>
+
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            justify-content: center;
+            background-color:rgb(0, 0, 0);
+            color:orange;
+            
+        }
+        #image{ 
+            float: right;
+            position: relative;
+            top: -100px;
+            left: -100px ;
+        }
+        #description{
+            float: right;
+            position: relative;
+            top: -45px;
+            left: -46px;
+        }
+        div{
+            font-family: Monospace,Monaco;
+        }
+       
+        
+
+    </style>
+</head>
+<body>
+    <div>
+        <h1>The weather today</h1>
+        
+        <form id="searchForm">
+            <label for = "cityInput"> search weather location:</label>
+            <input type="text" id="cityInput" name="cityInput">
+            <input type="submit" id="button" value="Submit" onclick="getWeather()">
+        </form>
+        
+
+        <p id="weather"></p>
+        <p id="cityName"></p>
+        <p id="Temp"></p>
+        <img id="image">
+        <p id="description"></p>
+        <p id="WSpeed"></p>
+
+        
+    </div>
+        
+    <script>
+        // stops form reloading on submit
+        let form = document.getElementById("searchForm");
+        form.addEventListener('submit', () => {
+            event.preventDefault();
+        })
+
+        function getBackground(d){
+                
+            if (d>=200 && d<=232){
+                //thunderstorm
+                return  "https://www.animatedimages.org/data/media/42/animated-thunderstorm-image-0007.gif";
+            }
+            else if(d>=300 && d<=321){
+                //drizlling
+                return "https://media.giphy.com/media/QPsEnRasf0Vfa/giphy.gif";
+            }
+            else if(d>=500 && d<=531){
+                //rain
+                return "https://giffiles.alphacoders.com/209/209277.gif";
+            }
+            else if(d>=801 && d<=804){
+                //clouds
+                return "https://images.pexels.com/photos/158163/clouds-cloudporn-weather-lookup-158163.jpeg";
+            }
+            else {
+                return "https://images.pexels.com/photos/912110/pexels-photo-912110.jpeg";
+            }
+                
+        } 
+
+        let url = "http://192.168.0.197:8000/weather?";
+        let img_url = "https://openweathermap.org/img/wn/";
+        let cityName = document.getElementById("cityName");
+
+        const getWeather = () => {
+            let cityInput = document.getElementById("cityInput");
+            let cityname = cityInput.value;
+            let weather = document.getElementById('weather');
+            let cityName = document.getElementById('cityName');
+            let Temp = document.getElementById('Temp');
+            let Wspeed = document.getElementById('Wspeed');
+            let image = document.getElementById('image');
+            let desc = document.getElementById('description');
+            const rainUrl =  "https://www.animatedimages.org/data/media/606/animated-rain-image-0019.gif"; 
+            
+             
+
+            fetch(url + "city="+ cityname + "&units=metric")
+            .then(res => {
+                return res.json()
+            })
+            .then(data => {
+                console.log(data)
+                cityName.innerText = data.name
+                Temp.innerHTML = `Temp: ${data.main.temp} \u00B0C`
+                WSpeed.innerText ="wind speed: " + data.wind.speed + " m/s"
+                image.src =  img_url + data.weather[0].icon + "@2x.png"
+                desc.innerText = data.weather[0].description
+                document.body.style.background = `
+                url(${getBackground(data.weather[0].id)})
+                center/cover
+                `
+
+            })
+            
+        }
+      
+    </script>
+
+</body>
+</html>
