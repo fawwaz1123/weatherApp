@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 app = FastAPI()
 
-origins = ["http://127.0.0.1:5500"]
+origins = ["allowed clients adresses"]
 app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
